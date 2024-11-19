@@ -1,0 +1,114 @@
+#include <iostream>
+#include <vector>
+
+template <typename T>
+class Matrix 
+{
+private:
+    std::vector<std::vector<T>> data;
+
+public:
+    Matrix(size_t rows, size_t cols) : data(rows, std::vector<T>(cols)) {}
+
+    void setElement(size_t row, size_t col, T value)
+    {
+        data[row][col] = value;
+    }
+
+    T getElement(size_t row, size_t col) const 
+    {
+        return data[row][col];
+    }
+
+    std::vector<T> copyRow(size_t row) const 
+    {
+        return data[row];
+    }
+
+    
+
+    std::vector<T> copyColumn(size_t col) const 
+    {
+        std::vector<T> column(data.size());
+        for (size_t i = 0; i < data.size(); ++i) 
+        {
+            column[i] = data[i][col];
+        }
+        return column;
+    }
+
+    std::vector<T> copyMainDiagonal() const 
+    {
+        size_t n = std::min(data.size(), data[0].size());
+        std::vector<T> diagonal(n);
+        for (size_t i = 0; i < n; ++i)
+        {
+            diagonal[i] = data[i][i];
+        }
+        return diagonal;
+    }
+
+  
+    friend std::istream& operator>>(std::istream& in, Matrix<T>& matrix)
+    {
+        for (size_t i = 0; i < matrix.data.size(); ++i)
+        {
+            for (size_t j = 0; j < matrix.data[i].size(); ++j) 
+            {
+                in >> matrix.data[i][j];
+            }
+        }
+        return in;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix)
+    {
+        for (const auto& row : matrix.data) 
+        {
+            for (const auto& element : row) 
+            {
+                out << element << " ";
+            }
+            out << "\n";
+        }
+        return out;
+    }
+};
+
+int main() 
+{
+    using namespace std;
+    setlocale(LC_ALL, "Ukrainian");
+
+    Matrix<int> matrix(3, 3);
+    cout << "Введіть елементи матриці (3x3):\n";
+    cin >> matrix;
+
+    cout << "Ваша матриця:\n" << matrix;
+
+    vector<int> row = matrix.copyRow(1);
+    cout << "Копія другого рядка:\n";
+    for (const auto& element : row) 
+    {
+        cout << element << " ";
+    }
+    cout << "\n";
+
+    vector<int> col = matrix.copyColumn(1);
+    cout << "Копія другого стовпця:\n";
+    for (const auto& element : col) 
+    {
+        cout << element << " ";
+    }
+    cout << "\n";
+
+    vector<int> diagonal = matrix.copyMainDiagonal();
+    cout << "Копія головної діагоналі:\n";
+    for (const auto& element : diagonal) 
+    {
+        cout << element << " ";
+    }
+    cout << "\n";
+
+    return 0;
+}
